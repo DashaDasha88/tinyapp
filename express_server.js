@@ -9,6 +9,8 @@ const urlDatabase = {
   "9sn5xK": "http://www.google.com"
 };
 
+
+///ROUTES///
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -30,6 +32,31 @@ app.get("/set", (req, res) => {
   res.send(`a = ${a}`);
  });
 
+ app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
+ });
+
+ app.get("/urls/:shortURL", (req, res) => {
+   console.log(req.params);
+   console.log(urlDatabase[req.params.shortURL]);
+  const templateVars = { 
+    shortURL: req.params.shortURL, 
+    longURL: urlDatabase[req.params.shortURL]
+  };
+  res.render("urls_show", templateVars);
+});
+
+/*app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
+app.get("/urls/:id", (req, res) => {
+  res.render("urls_new");
+});*/
+
+
+///LISTEN///
 app.listen(PORT, () => {
   console.log('Example app listening on port ${PORT}!');
 });
