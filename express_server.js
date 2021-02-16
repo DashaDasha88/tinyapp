@@ -12,10 +12,15 @@ const urlDatabase = {
 };
 
 ///FUNCTIONS///
-function generateRandomString(){
-  
-}
+const generateRandomString = () => {
+  let string = ' ';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
+  for (let i = 0; i < 6; i++){
+    string += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return string;
+}
 
 ///GET ROUTES///
 app.get("/", (req, res) => {
@@ -53,15 +58,34 @@ app.get("/set", (req, res) => {
    console.log(urlDatabase[req.params.shortURL]);
    const templateVars = { 
      shortURL: req.params.shortURL, 
-     longURL: urlDatabase[req.params.shortURL]
+     longURL: urlDatabase[req.params.shortURL].longURL
     };
     res.render("urls_show", templateVars);
   });
 
+  app.get('/u/:shortURL', (req, res) => {
+    if (urlDatabase[req.params.shortURL]) {
+      const longURL = urlDatabase[req.params.shortURL].longURL;
+      if (longURL === undefined) {
+        res.status(302);
+      } else {
+        res.redirect(`/urls/${generatedShortURL}`);
+      }
+    } else {
+      res.status(404).send("The short URL does not match the long URL.");
+    }
+  });
+
 ///POST///
 app.post("/urls", (req, res) => {
-  console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  let generatedShortURL = generateRandomString();
+
+  urlDatabase[generatedShortURL] = {
+    shortURL: generatedShortURL,
+    longURL: [req.body.longURL]
+  };
+
+  res.redirect(`/urls/${generatedShortURL}`);
 });
 
 
