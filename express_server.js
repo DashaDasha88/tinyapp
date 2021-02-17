@@ -88,6 +88,11 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${generatedShortURL}`);
 });
 
+app.post("/urls/:shortURL/delete", (req, res) => {
+  delete urlDatabase[req.params.id];
+  res.redirect('/urls');
+});
+
 
 ///LISTEN///
 app.listen(PORT, () => {
