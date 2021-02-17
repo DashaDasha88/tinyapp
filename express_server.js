@@ -31,65 +31,42 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  console.log(urlDatabase)
+  res.render("urls_index", templateVars);
+});
+ 
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
 });
 
-app.get("/set", (req, res) => {
-  const a = 1;
-  res.send(`a = ${a}`);
- });
- 
- app.get("/fetch", (req, res) => {
-  res.send(`a = ${a}`);
- });
+app.get("/urls/:shortURL", (req, res) => {
+  console.log(req.params);
+  console.log(urlDatabase[req.params.shortURL]);
+  const templateVars = { 
+    shortURL: req.params.shortURL, 
+    longURL: urlDatabase[req.params.shortURL]
+  };
+  res.render("urls_show", templateVars);
+});
 
- app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
-  res.render("urls_index", templateVars);
- });
- 
- app.get("/urls/new", (req, res) => {
-   res.render("urls_new");
- });
-
- app.get("/urls/:shortURL", (req, res) => {
-   console.log(req.params);
-   console.log(urlDatabase[req.params.shortURL]);
-   const templateVars = { 
-     shortURL: req.params.shortURL, 
-     longURL: urlDatabase[req.params.shortURL].longURL
-    };
-    res.render("urls_show", templateVars);
-  });
-
-  app.get('/u/:shortURL', (req, res) => {
-    if (urlDatabase[req.params.shortURL]) {
-      const longURL = urlDatabase[req.params.shortURL].longURL;
-      if (longURL === undefined) {
-        res.status(302);
-      } else {
-        res.redirect(`/urls/${generatedShortURL}`);
-      }
-    } else {
-      res.status(404).send("The short URL does not match the long URL.");
-    }
-  });
+app.get('/u/:shortURL', (req, res) => {
+  res.redirect(urlDatabase[req.params.shortURL]);
+});
 
 ///POST///
 app.post("/urls", (req, res) => {
   let generatedShortURL = generateRandomString();
 
-  urlDatabase[generatedShortURL] = {
-    shortURL: generatedShortURL,
-    longURL: [req.body.longURL]
-  };
+  urlDatabase[generatedShortURL] = req.body.longURL
 
   res.redirect(`/urls/${generatedShortURL}`);
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.id];
+  const urlToDelete = req.params.shortURL
+  delete urlDatabase[urlToDelete];
   res.redirect('/urls');
 });
 
