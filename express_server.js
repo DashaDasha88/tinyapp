@@ -84,6 +84,11 @@ app.get("/register", (req, res) => {
   res.render("registration");
 });
 
+//Login Page
+app.get("/login", (req, res) => {
+  res.render("login");
+});
+
 ///POST ROUTES///
 
 //New Short URL Page
@@ -130,9 +135,9 @@ app.post('/register', (req, res) => {
   let userID = generateRandomString();
 
   let userObj = {
-    id = userID,
-    email = req.body.email,
-    password = req.body.password
+    id: userID,
+    email: req.body.email,
+    password: req.body.password
   }
 
   res.cookie("user_id", userID);
