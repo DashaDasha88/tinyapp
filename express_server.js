@@ -13,21 +13,27 @@ app.set("view engine", "ejs");
 
 //Original URL Database
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sn5xK": "http://www.google.com"
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "aJ48lW"
+  },
+  "9sn5xK": {
+    longURL: "http://www.google.com",
+    userID: "aJ48lW"
+  }
 };
 
 //Users Object
 const userDatabase = { 
   "userRandomID": {
     id: "userRandomID", 
-    email: "dasha.kotova.mail@gmail.com", 
-    password: "ohai"
+    email: "cat@cat.com", 
+    password: "catty"
   },
  "user2RandomID": {
     id: "user2RandomID", 
-    email: "user2@example.com", 
-    password: "dishwasher-funk"
+    email: "bat@bat.com", 
+    password: "batty"
   }
 }
 
@@ -44,6 +50,16 @@ const generateRandomString = () => {
   return string;
 }
 
+//Check if the user already registered a certain e-mail
+const userByEmail = function(email, userDatabase){
+  for (let user in userDatabase){
+    if(userDatabase[user].email === email){
+      return true;
+    } 
+  }
+  return false;
+}
+
 ///GET ROUTES///
 
 //Homepage
@@ -54,39 +70,46 @@ app.get("/", (req, res) => {
 //URLs Index Page
 app.get("/urls", (req, res) => {
   const templateVars = {
-    urls: urlDatabase
+    urls: urlDatabase, 
+    user: userDatabase[req.cookies["user_id"]]
   };
   res.render("urls_index", templateVars);
 });
 
 //Create New URL page
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = {
+    user: userDatabase[req.cookies["user_id"]]
+  };
+  res.render("urls_new", templateVars);
 });
 
 //Display New URL page
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { 
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL]
+    longURL: urlDatabase[req.params.shortURL],
+    user: userDatabase[req.cookies["user_id"]]
   };
   res.render("urls_show", templateVars);
 });
 
 //Redirect from ShortURL to FullURL page
 app.get("/u/:shortURL", (req, res) => {
-let fullURL = urlDatabase[req.params.shortURL];
+let fullURL = urlDatabase[req.params.shortURL].longURL;
 res.redirect(fullURL);
 });
 
 //Registration Form
 app.get("/register", (req, res) => {
-  res.render("registration");
+  const templateVars = {user:false};
+  res.render("registration", templateVars);
 });
 
 //Login Page
 app.get("/login", (req, res) => {
-  res.render("login");
+  const templateVars = {user:false};
+  res.render("login", templateVars);
 });
 
 ///POST ROUTES///
@@ -97,7 +120,8 @@ app.post("/urls", (req, res) => {
 
   urlDatabase[generatedShortURL] = req.body.longURL;
 
-  res.redirect(`/urls/${generatedShortURL}`);
+  //res.redirect(`/urls/${generatedShortURL}`);
+  res.redirect("/urls");
 });
 
 //Delete URL
@@ -115,35 +139,58 @@ app.post('/urls/:shortURL/', (req, res) => {
   res.redirect('/urls');
 });
 
-//Login
-app.post('/login', (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
-
-  let currentUser = userDatabase[email]
-  
-  if (currentUser.password === password) {
-    res.redirect("urls_index");
-  } else {
-    res.send("Wrong password");
-  }
-
-});
-
 //Register
 app.post('/register', (req, res) => {
-  let userID = generateRandomString();
+  const addedEmail = req.body.email;
+  const addedPassword = req.body.password;
 
-  let userObj = {
-    id: userID,
-    email: req.body.email,
-    password: req.body.password
+  if (!addedEmail || !addedPassword){
+    res.status(400).send("Please enter a valid e-mail and password");
+  } else if (userByEmail(addedEmail, userDatabase)) {
+    res.status(400).send("Account for this e-mail already exists");
+  } else {
+    let userID = generateRandomString();  
+    
+    let newUserObj = {
+      id: userID,
+      email: req.body.email,
+      password: req.body.password
+    };
+    
+    userDatabase[userID] = newUserObj;
+    
+    res.cookie("user_id", userID);
+    res.redirect("/urls");
+  }
+});
+
+//Login
+app.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  let userID = false;
+
+  for (const user in userDatabase){
+    if (userDatabase[user].email === email && userDatabase[user].password === password){
+      userID = userDatabase[user].id;
+    }
   }
 
-  res.cookie("user_id", userID);
-  res.redirect("/urls");
-
+  //if(!userByEmail(email, userDatabase)){
+    if(!userID) {
+    res.status(403).send("No account matches this e-mail address");
+  } else {
+    res.cookie("user_id", userID);
+    res.redirect('/urls');
+  }
 });
+
+//Logout
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id");
+  res.redirect('/urls');
+});
+
 
 ///LISTEN///
 app.listen(PORT, () => {

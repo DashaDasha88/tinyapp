@@ -6,7 +6,7 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <!--My URLs & Create New URL-->
+    <!--My URLs & Create New URL Links-->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
@@ -16,12 +16,22 @@
     <!--Login & Registration Links-->
     <div class="topnav">
       <div class="login-container">
-        <form action="/login" method="GET">
-          <input type="submit" value="LOGIN">
-        </form>
-        <form action="/register" method="GET">
-          <input type="submit" value="REGISTER">
-        </form>
+        <div class="topnav">
+          <div class="login-container">
+          <% if(user) { %>
+              <form action="/logout" method="POST">
+                  <input type="submit" value="LOGOUT">
+              </form>
+          <% } else { %>
+              <form action="/Login" method="GET">
+                  <input type="submit" value="LOGIN">
+              </form>
+          <% } %>
+          <form action="/register" method="GET">
+            <input type="submit" value="REGISTER">
+          </form>
+          </div>
+        </div>
       </div>
     </div>
     <!--End of Login-->
