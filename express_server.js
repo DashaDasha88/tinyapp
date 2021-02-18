@@ -1,8 +1,10 @@
 const express = require("express");
-const app = express();
-const PORT = 8080; //default port 8080
 const bodyParser = require ("body-parser");
 const cookieParser = require("cookie-parser");
+const bcrypt = require('bcrypt');
+
+const PORT = 8080; //default port 8080\
+const app = express();
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -28,12 +30,12 @@ const userDatabase = {
   "userRandomID": {
     id: "userRandomID", 
     email: "cat@cat.com", 
-    password: "catty"
+    password: bcrypt.hashSync("catty", 10)
   },
  "user2RandomID": {
     id: "user2RandomID", 
     email: "bat@bat.com", 
-    password: "batty"
+    password: bcrypt.hashSync("batty", 10)
   }
 }
 
@@ -141,8 +143,9 @@ app.post('/urls/:shortURL/', (req, res) => {
 
 //Register
 app.post('/register', (req, res) => {
-  const addedEmail = req.body.email;
-  const addedPassword = req.body.password;
+  let addedEmail = req.body.email;
+  let addedPassword = req.body.password;
+
 
   if (!addedEmail || !addedPassword){
     res.status(400).send("Please enter a valid e-mail and password");
@@ -154,7 +157,7 @@ app.post('/register', (req, res) => {
     let newUserObj = {
       id: userID,
       email: req.body.email,
-      password: req.body.password
+      password: bcrypt.hashSync(addedPassword, 10)
     };
     
     userDatabase[userID] = newUserObj;
@@ -179,6 +182,8 @@ app.post('/login', (req, res) => {
   //if(!userByEmail(email, userDatabase)){
     if(!userID) {
     res.status(403).send("No account matches this e-mail address");
+  } else if(!bcrypt.compareSync(password, userDatabase[userID].password)){
+    res.status(403).send("Password mismatch")
   } else {
     res.cookie("user_id", userID);
     res.redirect('/urls');
