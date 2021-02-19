@@ -33,11 +33,11 @@ const getUserByEmail = function(email, userDatabase) {
   for (let user in userDatabase) {
     if (userDatabase[user].email === email) {
       return true;
+    } else {
+      return false;
     }
-  } else {
-    return false;
   }
   
 };
 
-module.exports = { generateRandomString, getUserByEmail, specificURLS };
+module.exports = { generateRandomString, specificURLS, getUserByEmail };

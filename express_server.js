@@ -55,7 +55,7 @@ app.get("/urls", (req, res) => {
 
 //Create New URL page
 app.get("/urls/new", (req, res) => {
-  let templateVars = {
+  const templateVars = {
     user: userDatabase[req.session.user_id],
   };
   res.render("urls_new", templateVars);
@@ -64,7 +64,7 @@ app.get("/urls/new", (req, res) => {
 //Display New URL page
 app.get("/urls/:shortURL", (req, res) => {
   if (urlDatabase[req.params.shortURL]) {
-    let templateVars = {
+    const templateVars = {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
       urlUserID: urlDatabase[req.params.shortURL].userID,
@@ -90,7 +90,7 @@ app.get("/u/:shortURL", (req, res) => {
 
 //Registration Form
 app.get("/register", (req, res) => {
-  let templateVars = {
+  const templateVars = {
     user: userDatabase[req.session.user_id],
   };
   res.render("registration", templateVars);
