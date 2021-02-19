@@ -18,7 +18,7 @@
   <main style="margin: 1em;">
 
     <!-- Header -->
-    <h1><strong>Dasha's URLs</strong></h1>
+    <h3><strong>My URLs</strong></h3>
 
     <!-- Table -->
     <table class="table">
@@ -36,7 +36,7 @@
         <tr>
         <% for(let url in urls) { %>
           <td><%= url %></td>
-          <td><%= urls[url] %></td>
+          <td><%= urls[url].longURL %></td>
           <!--Edit Button-->
           <td>
             <form method="GET" action="/urls/<%= url%>">

@@ -1,4 +1,4 @@
-<!-- views/partials/header.ejs -->
+<!-- views/partials/_header.ejs -->
 
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
@@ -9,31 +9,26 @@
     <!--My URLs & Create New URL Links-->
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <a class="nav-item nav-link" href="/urls"><strong>My URLs</strong></a>
+        <a class="nav-item nav-link" href="/urls/new"><strong>Create New URL</strong></a>
       </div>
     </div>
     <!--Login & Registration Links-->
-    <div class="topnav">
-      <div class="login-container">
-        <div class="topnav">
-          <div class="login-container">
-          <% if(user) { %>
-              <form action="/logout" method="POST">
-                  <input type="submit" value="LOGOUT">
-              </form>
-          <% } else { %>
-              <form action="/Login" method="GET">
-                  <input type="submit" value="LOGIN">
-              </form>
-          <% } %>
-          <form action="/register" method="GET">
-            <input type="submit" value="REGISTER">
-          </form>
-          </div>
+    <% if (user) { %> 
+      <form method="POST" action="/logout" class="form-inline">
+        <div class="form-group form-inline">
+          <label>Logged in as: <%= user.email %></label>
+          <button type="submit" class="btn btn-outline-dark" style="margin: 1em">LOGOUT</button>
+        </div>
+      </form>
+    <% } else { %>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link" href="/login" style="margin: 1em">LOGIN</a>
+          <a class="nav-item nav-link" href="/register" style="margin: 1em">REGISTER</a>
         </div>
       </div>
-    </div>
+      <% } %>
     <!--End of Login-->
   </nav>
 </header>
