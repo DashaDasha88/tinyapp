@@ -18,7 +18,11 @@
   <main style="margin: 1em;">
 
     <!-- Header -->
-    <h3><strong>My URLs</strong></h3>
+    <% if (user) { %> 
+      <h3><strong>My URLs</strong></h3>
+    <% } else { %>
+      <h3><strong>Please log in or register first</strong></h3>
+    <% } %>
 
     <!-- Table -->
     <table class="table">
