@@ -37,7 +37,7 @@ const userDatabase = {
 //Homepage
 app.get("/", (req, res) => {
   if (req.session.user_id){
-    res.redirect(/urls);
+    res.redirect("/urls");
   } else {
     res.redirect("/login");
   }
@@ -161,7 +161,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   if (userId) {
     if (urlDatabase[shortUrl].userId === userId){
       delete urlDatabase[shortUrl];
-      res.redirect("/urls";)
+      res.redirect("/urls");
     } else {
       res.status(401).send("You are not authorized to delete this URL.");
     }
@@ -200,7 +200,7 @@ app.post('/register', (req, res) => {
       const newUser = {
         id: userId,
         email: reqEmail,
-        password: bcrypt.hashSync(addedPassword, 10)
+        password: bcrypt.hashSync(reqPwd, 10)
       };
       userDatabase[userId] = newUser;
       req.session.user_id = userId;
