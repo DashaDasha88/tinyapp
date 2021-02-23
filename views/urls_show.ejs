@@ -19,14 +19,14 @@
 
       <!--Main Section-->
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
-        <p class="card-text">Short URL: <a href="/u/<%= shortURL %>" target="_blank"><%= shortURL %></a></p>
+        <p class="card-text">Short URL: <a href="/u/<%= shortUrl %>" target="_blank"><%= shortUrl %></a></p>
       </div>
 
       <!--Edit Field-->
       <p>
-        <form method ="POST" action="/urls/<%= shortURL %>">
-          <label for="newURL"> Update URL: </label>
-          <input id="newURL" type="text" name="newURL">
+        <form method ="POST" action="/urls/<%= shortUrl %>">
+          <label for="newUrl"> Update URL: </label>
+          <input id="newUrl" type="text" name="newUrl">
           <input type ="submit" value="Update!" class="btn btn-outline-secondary" >
         </form>
       </p>
