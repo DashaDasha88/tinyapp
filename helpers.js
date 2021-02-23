@@ -19,7 +19,7 @@ const getUserUrl = function(userId, urlDatabase) {
 
   for (let url in urlDatabase) {
     if (urlDatabase[url].userId === userId) {
-      userUrls[shortUrl] = urlDatabase[shortUrl];
+      userUrls[url] = urlDatabase[url];
     }
   }
 
