@@ -13,13 +13,13 @@ const generateRandomString = () => {
 };
 
 //Identifies URLs specific to a user's ID
-const specificURLS = function(id, urlDatabase) {
+const getUserUrl = function(userId, urlDatabase) {
 
   let userUrls = {};
 
-  for (let shortURL in urlDatabase) {
-    if (urlDatabase[shortURL].userID === id) {
-      userUrls[shortURL] = urlDatabase[shortURL];
+  for (let url in urlDatabase) {
+    if (urlDatabase[url].userId === userId) {
+      userUrls[shortUrl] = urlDatabase[shortUrl];
     }
   }
 
@@ -40,4 +40,4 @@ const getUserByEmail = function(email, userDatabase) {
   
 };
 
-module.exports = { generateRandomString, specificURLS, getUserByEmail };
+module.exports = { generateRandomString, getUserUrl, getUserByEmail };
