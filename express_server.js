@@ -3,7 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require('bcrypt');
-const port = 8080; 
+const port = 8080;
 const app = express();
 
 app.set("view engine", "ejs");
@@ -57,7 +57,7 @@ app.get("/urls", (req, res) => {
       templateVars.urls = getUserUrl(userId, urlDatabase);
     } else {
       req.session = null;
-    };
+    }
   }
   res.render("urls_index", templateVars);
 });
@@ -169,7 +169,7 @@ app.post('/urls/:shortUrl', (req, res) => {
     if (urlDatabase[shortUrl].userId === userId) {
       urlDatabase[shortUrl].longUrl = req.body.newUrl;
       res.redirect('/urls');
-    } else { 
+    } else {
       res.status(401).send("You are not authorized to update this URL.");
     }
   } else {
@@ -193,7 +193,7 @@ app.post('/register', (req, res) => {
         password: bcrypt.hashSync(reqPwd, 10)
       };
       userDatabase[userID] = newUser;
-      req.session.user_id = userID; 
+      req.session.user_id = userID;
       res.redirect("/urls");
     }
   } else {
@@ -209,7 +209,7 @@ app.post('/login', (req, res) => {
   if (reqEmail && reqPwd) {
     for (let user in userDatabase) {
       if (bcrypt.compareSync(reqPwd, userDatabase[user].password)) {
-        req.session.user_id = userDatabase[user].id; 
+        req.session.user_id = userDatabase[user].id;
         res.redirect(`/urls`);
         return;
       }
@@ -224,7 +224,7 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls');
 });
 
-// Start listening 
+// Start listening
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}.`);
 });
