@@ -15,7 +15,7 @@ const generateRandomString = () => {
 //Identifies URLs specific to a user's ID
 const getUserUrl = function(userId, urlDatabase) {
 
-  let userUrls = {};
+  const userUrls = {};
 
   for (let url in urlDatabase) {
     if (urlDatabase[url].userId === userId) {

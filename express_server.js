@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 // GET /urls
 app.get("/urls", (req, res) => {
   const userId = req.session.user_id;
-  let templateVars = {
+  const templateVars = {
     urls: null,
     user: null
   };
@@ -101,7 +101,6 @@ app.get("/urls/:shortUrl", (req, res) => {
 app.get("/u/:shortUrl", (req, res) => {
   const shortUrl = req.params.shortUrl;
   if (Object.keys(urlDatabase).includes(shortUrl)) {
-    console.log(urlDatabase[shortUrl].longUrl);
     res.redirect(urlDatabase[shortUrl].longUrl);
   } else {
     res.status(404).send("The URL you are trying to access does not exist.");
