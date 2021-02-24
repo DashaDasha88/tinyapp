@@ -77,8 +77,14 @@ app.get("/urls/new", (req, res) => {
 
 // GET /urls/:id
 app.get("/urls/:shortUrl", (req, res) => {
+  const userId = req.session.user_id;
+  if (!userId) {
+    res.status(401).send("You are not authorized to view this page.");
+    return;
+  }
+  
   const shortUrl = req.params.shortUrl;
-  if (Object.keys(urlDatabase).includes(shortUrl)) {
+  if (Object.keys(getUserUrl(userId, urlDatabase)).includes(shortUrl)) {
     const templateVars = {
       shortUrl: shortUrl,
       longUrl: urlDatabase[shortUrl].longUrl,
